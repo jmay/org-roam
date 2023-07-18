@@ -120,7 +120,7 @@ SPEC is a list, as per `dolist'."
 ;;; File utilities
 (defun org-roam-descendant-of-p (a b)
   "Return t if A is descendant of B."
-  (unless (equal (file-truename a) (file-truename b))
+  (unless (and a b (equal (file-truename a) (file-truename b)))
     (string-prefix-p (replace-regexp-in-string "^\\([A-Za-z]\\):" 'downcase (expand-file-name b) t t)
                      (replace-regexp-in-string "^\\([A-Za-z]\\):" 'downcase (expand-file-name a) t t))))
 
@@ -227,9 +227,9 @@ Like `org-fontify-like-in-org-mode', but supports `org-ref'."
   ;; `org-fontify-like-in-org-mode' here
   (with-temp-buffer
     (insert s)
-    (let ((org-ref-buffer-hacked t)
-          (org-fold-core-style 'overlays))
+    (let ((org-ref-buffer-hacked t))
       (org-mode)
+      (setq-local org-fold-core-style 'overlays)
       (font-lock-ensure)
       (buffer-string))))
 
